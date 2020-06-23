@@ -30,11 +30,8 @@ function editCombos() {
    * Sets the user into edit mode
    */
   function enterEditMode() {
-    for (let i = 0; i < combos.length; i++) {
-      const combo = combos[i]
-
-      combo.appendChild(createRemoveBtn(i))
-
+    for (let combo of combos) {
+      combo.appendChild(createRemoveBtn())
       combo.classList.add('edit-mode')
     }
 
@@ -45,58 +42,27 @@ function editCombos() {
    * Exits the user from edit mode
    */
   function exitEditMode() {
-    for (let combo of combos) {
-      if (combo.querySelector('.delete-btn')) {
-        const removeBtn = combo.querySelector('.delete-btn')
-        combo.removeChild(removeBtn)
-      }
-      if (combo.querySelector('.save-combo')) {
-        // const saveBtn = combo.querySelector('.save-combo')
-        combo.parentNode.removeChild(combo)
-        continue
-      }
-      if (combo.classList.contains('edit-mode')) {
-        combo.classList.remove('edit-mode')
-      }
-      if (combo.innerText.match(/\.\.\./)) {
+    for (let combo of comboContainer.querySelectorAll('.combo')) {
+      if (!combo.classList.contains('non-editable')) {
         comboContainer.removeChild(combo)
+      } else {
+        for (let span of combo.querySelectorAll('span')) {
+          combo.removeChild(span)
+        }
       }
-      // console.log(combo.classList)
     }
-    comboContainer.removeChild(comboContainer.querySelector('.add-combo'))
   }
 
+  
   /**
-   * Removes a combo from the collection
-   * @param {Event} e element that triggered the event
-   */
-  function removeCombo(e) {
-    comboContainer.removeChild(e.target.parentNode)
-  }
-
-  /**
-   * Creates the remove button placed inside each combo element during edit mode
-   * @param {number} i id to add to the remove button
-   */
-  function createRemoveBtn(i) {
-    const btn = document.createElement('span')
-    btn.classList.add('delete-btn')
-    btn.id = i
-    btn.innerText = '✖'
-
-    btn.addEventListener('click', removeCombo)
-    return btn
-  }
-
-  /**
-   * Creates the '+' (new combo) button placed after all defined combos
+   * Creates the '+' (new combo) button placed after all defined combos when in edit mode
    */
   function newComboBtn() {
     const addCombo = document.createElement('span')
     addCombo.classList.add('add-combo', 'combo')
     addCombo.id = 'create-combo'
     addCombo.innerText = '+'
-    addCombo.addEventListener('click', createCombo)
+    addCombo.addEventListener('click', createComboContainer)
     return addCombo
   }
 
@@ -104,19 +70,36 @@ function editCombos() {
    * Creates a new combo container for the user to edit
    * @param {Event} e element that triggered the event
    */
-  function createCombo(e) {
-    const index = comboContainer.childNodes.length
-    const addBtn = e.target
-
+  function createComboContainer(e) {
+    comboContainer.removeChild(e.target)
+    
     const newCombo = document.createElement('span')
     newCombo.classList.add('emoji-item', 'combo', 'edit-mode')
     newCombo.innerText = '...'
-    newCombo.appendChild(createRemoveBtn(index))
-
-    comboContainer.removeChild(addBtn)
+    newCombo.appendChild(createRemoveBtn())
     comboContainer.appendChild(newCombo)
-    comboContainer.appendChild(addBtn)
+    
+    comboContainer.appendChild(newComboBtn())
   }
+}
+/**
+ * Removes a combo from the collection
+ * @param {Event} e element that triggered the event
+ */
+function removeCombo(e) {
+  document.querySelector('.combos').removeChild(e.target.parentNode)
+}
+
+/**
+ * Creates the remove button placed inside each combo element during edit mode
+ */
+function createRemoveBtn() {
+  const btn = document.createElement('span')
+  btn.classList.add('delete-btn')
+  btn.innerText = '✖'
+
+  btn.addEventListener('click', removeCombo)
+  return btn
 }
 
 /**
@@ -132,19 +115,18 @@ function addToNewCombo(emoji) {
 
   if (lastComboContainer.classList.contains('non-editable')) return
 
+  for (let span of lastComboContainer.querySelectorAll('span')) {
+    lastComboContainer.removeChild(span)
+  }
+
   const comboText = lastComboContainer.innerText
-    .replace('\n✖', '')
-    .replace('\n✔', '')
 
   // if the contents of the current combo box is '+' then we know
   // that the user is trying to add emojis to the 'add combo' element
   // and when that is the case we dont modify the element
   if (comboText === '+') return
 
-  const delBtn = lastComboContainer.querySelector('.delete-btn')
-
-  lastComboContainer.removeChild(delBtn)
-
+  
   if (comboText.match(/\.\.\./)) {
     lastComboContainer.innerText = emoji
     lastComboContainer.name = emoji
@@ -152,13 +134,13 @@ function addToNewCombo(emoji) {
     lastComboContainer.innerText = comboText + ' ' + emoji
     lastComboContainer.name = comboText + ' ' + emoji
   }
-
+  
   const length = lastComboContainer.innerText.length
-
+  
   adjustComboSpan(length, lastComboContainer)
-
+  
   lastComboContainer.appendChild(createSaveBtn())
-  lastComboContainer.appendChild(delBtn)
+  lastComboContainer.appendChild(createRemoveBtn())
 }
 
 /**
@@ -177,10 +159,11 @@ function createSaveBtn() {
  * @param {Event} e element that triggered event
  */
 function updateComboAmount(e) {
-  e.target.parentNode.classList.add('non-editable')
+  const combo = e.target.parentNode
+  combo.classList.add('non-editable')
   // adding eventlistener to the edited element
-  e.target.parentNode.addEventListener('click', (combo) => {
-    emojiClick(combo, false)
+  combo.addEventListener('click', (emoji) => {
+    emojiClick(emoji, false)
   })
   updateCombos()
 }
