@@ -17,9 +17,9 @@ function loadCombos() {
   emojiContainer.classList.add('ttv-emoji-contents', 'combos')
 
   if (combos) {
-    for (combo of combos.emojis) {
+    for (let combo of combos.emojis) {
       const emojiItem = document.createElement('span')
-      emojiItem.classList.add('emoji-item', 'combo')
+      emojiItem.classList.add('emoji-item', 'combo', 'non-editable')
       emojiItem.innerText = combo
       emojiItem.name = combo
       adjustComboSpan(combo.length, emojiItem)

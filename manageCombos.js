@@ -2,16 +2,6 @@
  * boolean deciding if user should enter or exit edit mode
  */
 var editMode = false
-/**
- * true if the user has clicked the plus icon when editing combos.
- * (prevents the user from editing other, already defined, combos)
- */
-var clickedNew = false
-/**
- * The original value of combos when the user enters edit mode.
- * (Used to prevent user from editing already defined combos)
- */
-var baseAmountOfCombos = document.querySelectorAll('.combo').length
 
 /**
  * Controls edit mode
@@ -82,13 +72,6 @@ function editCombos() {
    */
   function removeCombo(e) {
     comboContainer.removeChild(e.target.parentNode)
-
-    // console.log(comboContainer.childNodes.length)
-    // console.log(baseAmountOfCombos)
-    // puts the check back in place to prevent user from adding on to the already defined combos
-    if (comboContainer.childNodes.length === baseAmountOfCombos - 1) {
-      clickedNew = false
-    }
   }
 
   /**
@@ -133,8 +116,6 @@ function editCombos() {
     comboContainer.removeChild(addBtn)
     comboContainer.appendChild(newCombo)
     comboContainer.appendChild(addBtn)
-
-    clickedNew = true
   }
 }
 
@@ -143,12 +124,14 @@ function editCombos() {
  * @param {string} emoji emoji string
  */
 function addToNewCombo(emoji) {
-  if (!clickedNew) return
 
   const comboContainer = document.querySelector('.combos')
   const combos = comboContainer.querySelectorAll('.combo')
 
   const lastComboContainer = comboContainer.childNodes[combos.length - 2]
+
+  if (lastComboContainer.classList.contains('non-editable')) return
+
   const comboText = lastComboContainer.innerText
     .replace('\n✖', '')
     .replace('\n✔', '')
@@ -194,10 +177,10 @@ function createSaveBtn() {
  * @param {Event} e element that triggered event
  */
 function updateComboAmount(e) {
-  baseAmountOfCombos = document.querySelectorAll('.combo').length
+  e.target.parentNode.classList.add('non-editable')
   // adding eventlistener to the edited element
-  e.target.parentNode.addEventListener('click', (e) => {
-    emojiClick(e, false)
+  e.target.parentNode.addEventListener('click', (combo) => {
+    emojiClick(combo, false)
   })
   updateCombos()
 }
