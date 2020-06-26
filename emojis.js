@@ -1,4 +1,4 @@
-var emojis = [
+var emojisArray = [
   {
     category: 'Favorites',
     emojis: [

@@ -1,12 +1,12 @@
 #ttv-emoji-btn {
-  height: 30px;
+  height: 3rem;
   width: auto;
   cursor: pointer;
   position: relative;
   filter: grayscale(100%);
   box-sizing: border-box;
-  padding: 5px;
-  border-radius: 5px;
+  padding: 0.5rem;
+  border-radius: 0.5rem;
 }
 
 #ttv-emoji-btn:hover {
@@ -17,21 +17,21 @@
 #ttv-emoji-popup-container {
   position: absolute;
   z-index: 10;
-  width: 317px;
-  height: 500px;
-  bottom: 100px;
-  right: -50px;
-  border: 2px solid #9546df;
+  width: 31.7rem;
+  height: 50rem;
+  bottom: 10rem;
+  right: -5rem;
+  border: 0.2rem solid #9546df;
   background-color: rgb(10, 10, 10);
-  border-radius: 5px;
+  border-radius: 0.5rem;
   overflow-y: auto;
 }
 
 #ttv-emoji-popup-container #combo-edit-btn {
-  padding: 5px 10px;
-  border: 1px solid #ddd;
-  border-radius: 5px;
-  margin: 10px;
+  padding: 0.5rem 1rem;
+  border: 0.1rem solid #ddd;
+  border-radius: 0.5rem;
+  margin: 1rem;
   display: inline-block;
   position: relative;
   cursor: pointer;
@@ -41,13 +41,20 @@
   background-color: #222;
 }
 
+#ttv-emoji-popup-container .edit-tip {
+  position: absolute;
+  top: 1.5rem;
+  left: 12rem;
+  animation: 3s fade-tooltip forwards ease-in;
+}
+
 #ttv-emoji-popup-container .emoji-grid {
   display: block;
-  padding: 10px;
+  padding: 1rem;
 }
 
 #ttv-emoji-popup-container .emoji-grid .category {
-  padding: 10px 0;
+  padding: 1rem 0;
 }
 
 #ttv-emoji-popup-container .emoji-grid .category .header {
@@ -65,7 +72,7 @@
 
 #ttv-emoji-popup-container .emoji-grid .category .combos {
   grid-template-columns: repeat(4, 1fr);
-  gap: 2px;
+  gap: 0.2rem;
 }
 
 #ttv-emoji-popup-container
@@ -77,14 +84,18 @@
   font-size: 1.5em;
   width: 100%;
   cursor: pointer;
-  border-radius: 3px;
+  border-radius: 0.3rem;
 }
 
-#ttv-emoji-popup-container .emoji-grid .category .ttv-emoji-contents .combo {
+#ttv-emoji-popup-container
+  .emoji-grid
+  .category
+  .ttv-emoji-contents
+  .combo {
   width: 100%;
-  border: 1px solid rgb(150, 150, 150);
-  border-radius: 5px;
-  padding: 5px 0;
+  border: 0.1rem solid rgb(150, 150, 150);
+  border-radius: 0.5rem;
+  padding: 0.5rem 0;
   position: relative;
 }
 
@@ -93,12 +104,12 @@
   .category
   .ttv-emoji-contents
   .combo
-  .delete-btn {
+  .right-btn {
   position: absolute;
   top: 0;
-  right: 5px;
-  font-size: 15px;
-  height: 10px;
+  right: 0.5rem;
+  font-size: 1.5rem;
+  height: 1rem;
   cursor: pointer;
 }
 
@@ -107,17 +118,21 @@
   .category
   .ttv-emoji-contents
   .combo
-  .save-combo {
+  .left-btn {
   float: left;
   position: absolute;
   top: 0;
-  left: 5px;
-  font-size: 15px;
-  height: 10px;
+  left: 0.5rem;
+  font-size: 1.5rem;
+  height: 1rem;
   cursor: pointer;
 }
 
-#ttv-emoji-popup-container .emoji-grid .category .ttv-emoji-contents .span-two {
+#ttv-emoji-popup-container
+  .emoji-grid
+  .category
+  .ttv-emoji-contents
+  .span-two {
   grid-column-end: span 2;
 }
 
@@ -155,7 +170,7 @@
   .category
   .ttv-emoji-contents
   .edit-mode {
-  cursor: default;
+  cursor: pointer;
 }
 
 #ttv-emoji-popup-container
@@ -172,10 +187,20 @@
   .ttv-emoji-contents
   .add-combo {
   text-align: center;
-  font-size: 18px;
+  font-size: 1.8rem;
   vertical-align: middle;
+  cursor: pointer;
 }
 
 .hidden {
   visibility: hidden;
+}
+
+@keyframes fade-tooltip {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
 }

@@ -13,7 +13,9 @@ function emojiMenu() {
   /**
    * The chat textarea element
    */
-  const chatBox = document.querySelector('[data-a-target="chat-input"]')
+  const chatBox = document.querySelector(
+    '[data-a-target="chat-input"]'
+  )
 
   /**
    * Determines if the menu should be shown or not
@@ -38,9 +40,10 @@ function emojiMenu() {
   }
 
   /**
-   * Listens for an key presses. (Will not do anything when menu is not open)
+   * Listens for key presses. (Will not do anything when menu is not open)
    */
   function keyPressEvent() {
+    //
     chatBox.addEventListener('keyup', (e) => {
       if (e.keyCode === 13 && show) {
         e.preventDefault()
@@ -62,7 +65,11 @@ function emojiMenu() {
    */
   function checkClicks() {
     window.addEventListener('click', (e) => {
+      // only pass if not in edit mode
       if (!userInEditMode) {
+        // first check: the clicked element cannot be inside the popup container
+        // second check: the clicked element cannot be the main toggle button
+        // third check: the container must be currently visible
         if (
           !injectContainer
             .querySelector('#ttv-emoji-popup-container')
@@ -96,6 +103,7 @@ function emojiMenu() {
    * it before the settings icon under chat
    */
   function createBtn() {
+    // creating application button
     const btn = document.createElement('img')
     btn.id = 'ttv-emoji-btn'
     btn.title = 'TTV Emoji Picker'
@@ -103,6 +111,7 @@ function emojiMenu() {
     btn.src =
       'https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/160/twitter/248/middle-finger_1f595.png'
     btn.addEventListener('click', toggleMenu)
+    // inject the button under the message box
     injectContainer.insertBefore(
       btn,
       injectContainer.querySelector('div.tw-inline-flex')
@@ -114,13 +123,20 @@ function emojiMenu() {
    */
   function toggleMenu() {
     show = !show
-    const popup = injectContainer.querySelector('#ttv-emoji-popup-container')
+    // grab the popup container from the DOM
+    const popup = injectContainer.querySelector(
+      '#ttv-emoji-popup-container'
+    )
     if (show) {
+      // if show is true we want to show the popup by removing the class "hidden"
       popup.classList.remove('hidden')
       popup.scrollTo(0, 0)
       chatBox.focus()
     } else {
+      // if show is false we add the "hidden" to hide popup
       popup.classList.add('hidden')
+      // if the user is in edit mode when we hide the popup
+      // we want to exit edit mode also
       if (userInEditMode) {
         editMode()
       }
@@ -131,10 +147,12 @@ function emojiMenu() {
    * Creates the Emoji Menu container and inserts it into the DOM
    */
   function createPopup() {
+    // creating the main combo element
     const main = document.createElement('div')
     main.id = 'ttv-emoji-popup-container'
     main.className = 'hidden'
 
+    // creating the edit combo button
     const createComboBtn = document.createElement('p')
     createComboBtn.id = 'combo-edit-btn'
     createComboBtn.innerText = 'Edit Combos'
@@ -142,10 +160,13 @@ function emojiMenu() {
 
     main.appendChild(createComboBtn)
 
+    // Creates emoji container
     const emojiGrid = document.createElement('div')
     emojiGrid.className = 'emoji-grid'
 
+    // Grab the combos from localstorage
     const combos = loadCombos()
+    // if combos exist, add eventListeners to each, and append to DOM
     if (combos) {
       for (let combo of combos.childNodes[1].childNodes) {
         combo.addEventListener('click', (e) => {
@@ -155,23 +176,28 @@ function emojiMenu() {
       emojiGrid.appendChild(combos)
     }
 
-    for (let i = 0; i < emojis.length; i++) {
+    // Go through each emoji category
+    for (let emojiCategory of emojisArray) {
       const category = document.createElement('div')
       category.classList.add('category')
 
+      // Add header for each category
       const header = document.createElement('h5')
       header.classList.add('header')
-      header.innerText = emojis[i].category
+      header.innerText = emojiCategory.category
       category.appendChild(header)
 
+      //Create container for the emojis to be put into
       const emojiContainer = document.createElement('div')
       emojiContainer.classList.add('ttv-emoji-contents')
 
-      for (let emoji of emojis[i].emojis) {
+      // go through each emoji of the current category and create an element for it
+      for (let emoji of emojiCategory.emojis) {
         const emojiElement = document.createElement('span')
         emojiElement.classList.add('emoji-item')
         emojiElement.name = emoji
         emojiElement.innerText = emoji
+        // handle click for that emoji
         emojiElement.addEventListener('click', (e) => {
           emojiClick(e, userInEditMode)
         })
@@ -180,17 +206,37 @@ function emojiMenu() {
       category.appendChild(emojiContainer)
       emojiGrid.appendChild(category)
     }
+    // append the application to the DOM
     main.appendChild(emojiGrid)
     injectContainer.appendChild(main)
   }
 
   /**
-   * Toggles edit mode. (also updates combos when user exits edit mode)
+   * Toggles edit mode. (calls updateCombos when exiting edit mode)
    */
   function editMode() {
+    // grabbing popup container
+    const popupContainer = injectContainer.querySelector(
+      '#ttv-emoji-popup-container'
+    )
+    // toggle edit mode check to tell menu how to behave
     userInEditMode = !userInEditMode
+    // call edit mode to toggle it on or off (adds or removes content from the dom)
     editCombos()
-    if (!userInEditMode) updateCombos()
+    if (!userInEditMode) {
+      // if user exits edit mode we update current collection of combos
+      // and removes tooltip from DOM
+      updateCombos()
+      popupContainer.removeChild(
+        popupContainer.querySelector('.edit-tip')
+      )
+    } else {
+      // Creates the tooltip and inserts it after the "Edit combos" button
+      const editTip = document.createElement('span')
+      editTip.classList.add('edit-tip')
+      editTip.innerText = 'Click a combo to edit it!'
+      popupContainer.appendChild(editTip)
+    }
   }
 }
 
@@ -205,6 +251,7 @@ function emojiClick(e, userInEditMode) {
 
   // adds clicked emoji to the newest combo if the user is in edit mode and returns
   if (userInEditMode) {
+    if (e.target.classList.contains('edit-mode')) return
     const emoji = e.target.name
     addToNewCombo(emoji)
     return

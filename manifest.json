@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name": "TTVEmoji Menu",
-  "version": "1.8",
+  "version": "1.8.5",
   "description": "An emoji menu for twitch.tv",
   "content_scripts": [
     {

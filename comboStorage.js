@@ -20,8 +20,7 @@ function loadCombos() {
     for (let combo of combos.emojis) {
       const emojiItem = document.createElement('span')
       emojiItem.classList.add('emoji-item', 'combo', 'non-editable')
-      emojiItem.innerText = combo
-      emojiItem.name = combo
+      emojiItem.innerText = emojiItem.name = combo
       adjustComboSpan(combo.length, emojiItem)
       emojiContainer.appendChild(emojiItem)
     }
@@ -34,18 +33,17 @@ function loadCombos() {
  * Takes the combo items from the menu and pushes their content to localStorage
  */
 function updateCombos() {
-  // editCombos()
   const combos = document.querySelectorAll('.combo')
 
   const emojis = []
-  for (let i = 0; i < combos.length; i++) {
-    // console.log(combo)
-    const combo = combos[i]
-    // console.log(combo.childNodes)
+  for (let combo of combos) {
+    // we dont want to save the "new combo" button's contents
+    if (combo.id === 'create-combo') {
+      continue
+    }
     if (combo.querySelector('.save-combo')) {
       combo.removeChild(combo.querySelector('.save-combo'))
     }
-    // combo.addEventListener('click', emojiClick)
     const text = combo.innerText.replace('\n✔', '').replace('\n✖', '')
     emojis.push(text)
   }
