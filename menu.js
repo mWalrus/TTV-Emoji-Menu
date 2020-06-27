@@ -1,4 +1,3 @@
-'use strict'
 /**
  * Creates the application and injects it in the DOM
  */
@@ -43,16 +42,12 @@ function emojiMenu() {
    * Listens for key presses. (Will not do anything when menu is not open)
    */
   function keyPressEvent() {
-    //
-    chatBox.addEventListener('keyup', (e) => {
-      if (e.keyCode === 13 && show) {
-        e.preventDefault()
-        toggleMenu()
-      }
-    })
+    // Adds eventlisteners for keypresses
     window.addEventListener('keyup', (e) => {
-      if (e.keyCode === 27 && userInEditMode) {
-        e.preventDefault()
+      e.preventDefault()
+      if (e.keyCode === 13 && show) {
+        toggleMenu()
+      } else if (e.keyCode === 27 && userInEditMode) {
         editMode()
       }
     })
@@ -87,15 +82,15 @@ function emojiMenu() {
    * Removes any possible duplicates of the application from the DOM
    */
   function removePrevContainers() {
-    if (injectContainer.querySelector('#ttv-emoji-popup-container')) {
-      injectContainer.removeChild(
-        injectContainer.querySelector('#ttv-emoji-popup-container')
-      )
+    const prevPopup = injectContainer.querySelector(
+      '#ttv-emoji-popup-container'
+    )
+    const prevBtn = injectContainer.querySelector('#ttv-emoji-btn')
+
+    if (prevPopup) {
+      injectContainer.removeChild(prevPopup)
     }
-    if (injectContainer.querySelector('#ttv-emoji-btn'))
-      injectContainer.removeChild(
-        injectContainer.querySelector('#ttv-emoji-btn')
-      )
+    if (prevBtn) injectContainer.removeChild(prevBtn)
   }
 
   /**
@@ -106,8 +101,7 @@ function emojiMenu() {
     // creating application button
     const btn = document.createElement('img')
     btn.id = 'ttv-emoji-btn'
-    btn.title = 'TTV Emoji Picker'
-    btn.alt = 'emoji picker button'
+    btn.title = btn.alt = 'TTV Emoji Picker'
     btn.src =
       'https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/160/twitter/248/middle-finger_1f595.png'
     btn.addEventListener('click', toggleMenu)
@@ -187,7 +181,7 @@ function emojiMenu() {
       header.innerText = emojiCategory.category
       category.appendChild(header)
 
-      //Create container for the emojis to be put into
+      //Create container for the emojis of the current category to be put into
       const emojiContainer = document.createElement('div')
       emojiContainer.classList.add('ttv-emoji-contents')
 
@@ -195,8 +189,7 @@ function emojiMenu() {
       for (let emoji of emojiCategory.emojis) {
         const emojiElement = document.createElement('span')
         emojiElement.classList.add('emoji-item')
-        emojiElement.name = emoji
-        emojiElement.innerText = emoji
+        emojiElement.innerText = emojiElement.name = emoji
         // handle click for that emoji
         emojiElement.addEventListener('click', (e) => {
           emojiClick(e, userInEditMode)
@@ -290,7 +283,6 @@ function emojiClick(e, userInEditMode) {
     var event = new Event('input', { bubbles: true })
     // and send it off to the component
     ta.dispatchEvent(event)
-
     ta.focus()
   }
 }

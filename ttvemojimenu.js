@@ -17,9 +17,13 @@ document
     // we sleep a little before reloading the app
     // to allow for the chat module to load
     await sleep(5)
-    emojiMenu()
+    initializeApplication()
   })
 
-console.log('[TTVEmoji Menu] (v1.8.5) Initializing...')
-emojiMenu()
-console.log('[TTVEmoji Menu] (v1.8.5) Done!')
+function initializeApplication() {
+  console.log('[TTVEmoji Menu] (v1.8.5) Initializing...')
+  emojiMenu()
+  console.log('[TTVEmoji Menu] (v1.8.5) Done!')
+}
+
+initializeApplication()
