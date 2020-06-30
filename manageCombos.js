@@ -90,7 +90,8 @@ function editCombos() {
     newCombo.innerText = '...'
     newCombo.appendChild(createRemoveBtn())
 
-    comboContainer.appendChild(newCombo).appendChild(newComboBtn())
+    comboContainer.appendChild(newCombo)
+    comboContainer.appendChild(newComboBtn())
   }
 }
 /**
@@ -149,7 +150,8 @@ function updateValue(combo, emoji) {
   adjustComboSpan(length, combo)
 
   // re-add buttons to combo
-  combo.appendChild(createSaveBtn()).appendChild(createRemoveBtn())
+  combo.appendChild(createSaveBtn())
+  combo.appendChild(createRemoveBtn())
 }
 
 /**
