@@ -1,0 +1,3 @@
+for creating a favourites system i could start by creating an object for each emoji and add a counter
+to that object. then i need to figure out a way to handle incrementation on top of that to sort 
+the favorites.
