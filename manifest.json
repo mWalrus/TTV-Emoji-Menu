@@ -5,7 +5,7 @@
   "description": "An emoji menu for twitch.tv",
   "content_scripts": [
     {
-      "matches": ["*://*.twitch.tv/*"],
+      "matches": ["*://*.twitch.tv/*", "*://*.twitch.tv/moderator/*"],
       "js": [
         "emojis.js",
         "comboSpan.js",
